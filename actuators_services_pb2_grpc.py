@@ -6,29 +6,7 @@ import actuators_services_pb2 as actuators__services__pb2
 
 
 class ACStub(object):
-    """
-    em um primeiro momento é definido esse arquivo .proto
-    nele é criado um serviço contemplando dois métodos, um que é mandado uma requisição
-    e é esperado uma resposta e o serviço de converção stream
-    o grande objetivo do gRPC e do PROTO é a padronização
-
-    service TemperatureConverterGRPC {
-    // recebo uma entrada e retorno uma resposta
-    // se eu quiser fazer no formato stream, preciso colocar stream antes
-    // Entrada: as mensagens que indicam ao compilador o formato padrão
-    rpc convertReqResp (TempRequest) returns (TempResponse) {}
-    rpc convertStream (stream TempRequest) returns (stream TempResponse) {}
-    }
-
-    message TempRequest {
-    double tempFahrenheit = 1;
-    }
-
-    message TempResponse {
-    double tempCelsius = 1;
-    }
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -49,29 +27,7 @@ class ACStub(object):
 
 
 class ACServicer(object):
-    """
-    em um primeiro momento é definido esse arquivo .proto
-    nele é criado um serviço contemplando dois métodos, um que é mandado uma requisição
-    e é esperado uma resposta e o serviço de converção stream
-    o grande objetivo do gRPC e do PROTO é a padronização
-
-    service TemperatureConverterGRPC {
-    // recebo uma entrada e retorno uma resposta
-    // se eu quiser fazer no formato stream, preciso colocar stream antes
-    // Entrada: as mensagens que indicam ao compilador o formato padrão
-    rpc convertReqResp (TempRequest) returns (TempResponse) {}
-    rpc convertStream (stream TempRequest) returns (stream TempResponse) {}
-    }
-
-    message TempRequest {
-    double tempFahrenheit = 1;
-    }
-
-    message TempResponse {
-    double tempCelsius = 1;
-    }
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     def switchPower(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -106,29 +62,7 @@ def add_ACServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class AC(object):
-    """
-    em um primeiro momento é definido esse arquivo .proto
-    nele é criado um serviço contemplando dois métodos, um que é mandado uma requisição
-    e é esperado uma resposta e o serviço de converção stream
-    o grande objetivo do gRPC e do PROTO é a padronização
-
-    service TemperatureConverterGRPC {
-    // recebo uma entrada e retorno uma resposta
-    // se eu quiser fazer no formato stream, preciso colocar stream antes
-    // Entrada: as mensagens que indicam ao compilador o formato padrão
-    rpc convertReqResp (TempRequest) returns (TempResponse) {}
-    rpc convertStream (stream TempRequest) returns (stream TempResponse) {}
-    }
-
-    message TempRequest {
-    double tempFahrenheit = 1;
-    }
-
-    message TempResponse {
-    double tempCelsius = 1;
-    }
-
-    """
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
     def switchPower(request,

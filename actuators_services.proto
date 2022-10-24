@@ -1,30 +1,6 @@
 // indica a sintaxe
 syntax = "proto3";
 
-/* 
-em um primeiro momento é definido esse arquivo .proto
-nele é criado um serviço contemplando dois métodos, um que é mandado uma requisição
-e é esperado uma resposta e o serviço de converção stream
-o grande objetivo do gRPC e do PROTO é a padronização
-*/
-
-// service TemperatureConverterGRPC {
-//   // recebo uma entrada e retorno uma resposta
-//   // se eu quiser fazer no formato stream, preciso colocar stream antes
-//   // Entrada: as mensagens que indicam ao compilador o formato padrão
-//   rpc convertReqResp (TempRequest) returns (TempResponse) {}
-//   rpc convertStream (stream TempRequest) returns (stream TempResponse) {}
-// }
-
-// message TempRequest {
-//   double tempFahrenheit = 1;
-// }
-
-// message TempResponse {
-//   double tempCelsius = 1;
-// }
-
-
 service AC {
   rpc switchPower(Empty) returns (TempPowerStatus) {}
   rpc changeTemperature (TempRequest) returns (TempResponse) {}
@@ -45,15 +21,6 @@ message TempResponse {
   double tempCelsius = 1;
 }
 
-
-
-
-
-
-
-// em posse do arquivo proto, já estamos com a base para iniciar a implementação
-// antes de começar a implementação efetivamenteprecisamos gerar os stubs (apendices)
-// para ter comunicação entre maquinas distintas
 
 
 

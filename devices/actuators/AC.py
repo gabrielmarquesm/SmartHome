@@ -20,10 +20,3 @@ class ACService(pb_grpc.ACServicer):
     def changeTemperature(self, request, context):
         self.temperature = request.tempCelsius
         return pb.TempResponse(tempCelsius=self.temperature)
-
-    # def convertReqResp(self, request, context):
-    #     tempFahrenheit = request.tempFahrenheit
-    #     print(f"Received tempRequest: {tempFahrenheit:.2f} F")
-    #     tempCelsius = self.to_celsius(tempFahrenheit)
-    #     print(f"Temperature in celsius: {tempCelsius:.2f} C")
-    #     return actuators_services_pb2.TempResponse(tempCelsius=tempCelsius)
