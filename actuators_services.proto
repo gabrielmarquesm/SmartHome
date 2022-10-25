@@ -2,6 +2,8 @@
 syntax = "proto3";
 
 service AC {
+  rpc turnOn(Empty) returns (TempPowerStatus) {}
+  rpc turnOff(Empty) returns (TempPowerStatus) {}
   rpc switchPower(Empty) returns (TempPowerStatus) {}
   rpc changeTemperature (TempRequest) returns (TempResponse) {}
 }
