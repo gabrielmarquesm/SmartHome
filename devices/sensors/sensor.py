@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import string
+import json
 import threading
 import time
 
@@ -29,8 +29,11 @@ class Sensor(ABC):
     def publish(self, key):
         while True:
             self.calculate()
+
+            serialized_msg = json.dumps(self.get_info())
+
             self.channel.basic_publish(
-                exchange=kExchange, routing_key=key, body=self.get_info())
+                exchange=kExchange, routing_key=key, body=serialized_msg)
             print(f"Message sent: {self.get_info()}")
             time.sleep(5)
 

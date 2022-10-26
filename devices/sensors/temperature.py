@@ -20,4 +20,8 @@ class Temperature(Sensor):
         self.info = round(value, 1)
 
     def get_info(self):
-        return f"{Sensors.TEMP}-{self.info}"
+        return {
+            "sensor": Sensors.TEMP,
+            "actuator": "1",  # Em duvida como vamos relacionar o actuator-sensor
+            "content": self.info
+        }

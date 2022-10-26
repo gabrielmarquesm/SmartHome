@@ -1,4 +1,5 @@
 from concurrent import futures
+import json
 import threading
 
 import grpc
@@ -46,13 +47,15 @@ class Server(pb_grpc.ACServicer):
         channel.start_consuming()
 
     def callback(self, ch, method, properties, body):
-        message = body.decode('utf8').split("-")
-        actuator = message[0]
-        content = message[1]
+        message = json.loads(body.decode('utf8'))
+
+        sensor = message["sensor"]
+        actuator = message["actuator"]
+        content = message["content"]
 
         channel = grpc.insecure_channel(kIP+':'+kPort)
 
-        match actuator:
+        match sensor:
             case Sensors.TEMP:
                 temp = float(content)
                 stub = pb_grpc.ACStub(channel)
