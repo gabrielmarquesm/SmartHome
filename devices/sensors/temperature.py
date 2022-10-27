@@ -22,6 +22,6 @@ class Temperature(Sensor):
     def get_info(self):
         return {
             "sensor": Sensors.TEMP,
-            "actuator": "1",  # Em duvida como vamos relacionar o actuator-sensor
+            "actuator": self.key,
             "content": self.info
         }

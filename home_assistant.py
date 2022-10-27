@@ -3,48 +3,48 @@ import json
 import threading
 
 import grpc
-from grpc import Status
 import pika
 
 import actuators_services_pb2 as pb
 import actuators_services_pb2_grpc as pb_grpc
-from devices.actuators.AC import ACService, StatusMessageAC
+from devices.actuators.AC import AC
+from devices.actuators.actuator import PowerStatus
 from utils import kIP, kPort, Sensors, kExchange
 
 
-class Server(pb_grpc.ACServicer):
+class HomeAssistant():
     def __init__(self):
         pass
 
     def start_rpc(self):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         pb_grpc.add_ACServicer_to_server(
-            ACService(), server)
+            AC(), server)
         server.add_insecure_port("[::]:"+kPort)
         server.start()
         print("[RPC] Running!")
         server.wait_for_termination()
 
     def start_rabbit(self):
-
-        print("[Rabbit] Running!")
-
         connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=kIP))
         channel = connection.channel()
         channel.exchange_declare(
             exchange=kExchange, exchange_type='direct')
-        channel.queue_declare(
-            queue=Sensors.TEMP, arguments={'x-message-ttl': 1000}, exclusive=True)
-        channel.queue_bind(exchange=kExchange, queue=Sensors.TEMP)
-
-        print(' [Rabbit][*] Waiting for logs. To exit press CTRL+C')
-
         channel.basic_qos(prefetch_count=1)
-        channel.basic_consume(
-            queue=Sensors.TEMP, on_message_callback=self.callback, auto_ack=True)
 
+        self.create_queue(Sensors.TEMP, channel)
+        self.create_queue(Sensors.MOTION, channel)
+
+        print("[Rabbit] Running!")
         channel.start_consuming()
+
+    def create_queue(self, name, channel):
+        channel.queue_declare(
+            queue=name, arguments={'x-message-ttl': 1000}, exclusive=True)
+        channel.queue_bind(exchange=kExchange, queue=name)
+        channel.basic_consume(
+            queue=name, on_message_callback=self.callback, auto_ack=True)
 
     def callback(self, ch, method, properties, body):
         message = json.loads(body.decode('utf8'))
@@ -57,20 +57,16 @@ class Server(pb_grpc.ACServicer):
 
         match sensor:
             case Sensors.TEMP:
-                temp = float(content)
+                temp: float = content
                 stub = pb_grpc.ACStub(channel)
                 self.temp_handler(temp, stub)
 
             case Sensors.SMOKE:
                 pass
-                # smoke_density = float(content)
-                # stub = pb_grpc.SmokeStub(channel)
-                # self.smoke_handler(temp, stub)
-            case Sensors.LUMI:
-                # lumix = float(content)
-                # stub = pb_grpc.LumiStub(channel)
-                # self.luminosity_handler(temp, stub)
-                pass
+            case Sensors.MOTION:
+                motion_detected: bool = content
+                stub = pb_grpc.LampStub(channel)
+                self.motion_handler(motion_detected, stub)
 
     def run(self):
         rabbit_thread = threading.Thread(
@@ -82,9 +78,9 @@ class Server(pb_grpc.ACServicer):
         if temp > 30:
             status = stub.turnOn(pb.Empty()).status
             print(f"\nAmbient Temperature is too high - {temp} °C")
-            if status == StatusMessageAC.ON:
+            if status == PowerStatus.ON:
                 print("Turning ON AC...")
-            elif status == StatusMessageAC.ALREADY_ON:
+            elif status == PowerStatus.ALREADY_ON:
                 status = stub.changeTemperature(
                     pb.TempRequest(tempCelsius=18.0))
                 print(
@@ -93,9 +89,9 @@ class Server(pb_grpc.ACServicer):
         elif temp < 15:
             status = stub.turnOn(pb.Empty()).status
             print(f"\nAmbient Temperature is too low - {temp} °C")
-            if status == StatusMessageAC.ON:
+            if status == PowerStatus.ON:
                 print("Turning ON AC...")
-            elif status == StatusMessageAC.ALREADY_ON:
+            elif status == PowerStatus.ALREADY_ON:
                 status = stub.changeTemperature(
                     pb.TempRequest(tempCelsius=27.0))
                 print(
@@ -104,16 +100,28 @@ class Server(pb_grpc.ACServicer):
         elif 15 <= temp <= 20:
             status = stub.turnOff(pb.Empty()).status
             print(f"\nAmbient Temperature is OK - {temp} °C")
-            if status == StatusMessageAC.OFF:
+            if status == PowerStatus.OFF:
                 print("Turning OFF AC...")
 
     def smoke_handler(self, smoke_density, stub):
         pass
 
-    def luminosity_handler(self, lux, stub):
-        pass
+    def motion_handler(self, motion, stub):
+
+        if motion:
+            status = stub.turnOn(pb.Empty()).status
+
+            if status == PowerStatus.ON:
+                print("Motion Detected! Turning on Lamp...")
+                stub.changeColor(pb.ColorRequest(color=pb.Color.RED))
+                print("Lamp Color is now RED")
+
+            elif status == PowerStatus.ALREADY_ON:
+                print("Motion Detected but the lamp is already on")
+                stub.changeColor(pb.ColorRequest(color=pb.Color.GREEN))
+                print("Lamp Color is now GREEN")
 
 
 if __name__ == "__main__":
-    server = Server()
+    server = HomeAssistant()
     server.run()

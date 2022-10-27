@@ -7,5 +7,5 @@ kExchange = "EXCHANGE"
 
 class Sensors(str, Enum):
     TEMP = "TEMP"
-    LUMI = "LUMI"
+    MOTION = "MOTION"
     SMOKE = "SMOKE"

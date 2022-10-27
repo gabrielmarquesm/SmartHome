@@ -2,27 +2,56 @@
 syntax = "proto3";
 
 service AC {
-  rpc turnOn(Empty) returns (TempPowerStatus) {}
-  rpc turnOff(Empty) returns (TempPowerStatus) {}
-  rpc switchPower(Empty) returns (TempPowerStatus) {}
+  rpc turnOn(Empty) returns (PowerStatus) {}
+  rpc turnOff(Empty) returns (PowerStatus) {}
   rpc changeTemperature (TempRequest) returns (TempResponse) {}
+}
+
+service Lamp{
+  rpc turnOn(Empty) returns (PowerStatus) {}
+  rpc turnOff(Empty) returns (PowerStatus) {}
+  rpc changeColor(ColorRequest) returns (ColorResponse) {}
+}
+
+service Sprinkle{
+  rpc turnOn(Empty) returns (PowerStatus) {}
+  rpc turnOff(Empty) returns (PowerStatus) {}
 }
 
 message Empty{
 }
 
-message TempPowerStatus{
+message PowerStatus{
   string status = 1;
 }
 
+//AC
 message TempRequest {
   double tempCelsius = 1;
 }
-
 message TempResponse {
   double tempCelsius = 1;
 }
 
+//Lamp
+message ColorRequest{
+  Color color = 1;
+}
+message ColorResponse{
+  Color color = 1;
+}
+
+
+enum Color{
+  WHITE = 0; 
+  RED = 1;
+  GREEN = 2;
+  BLUE = 3;
+  YELLOW = 4;
+  ORANGE = 5;
+  PURPLE = 6;
+  BROWN = 7;
+}
 
 
 
