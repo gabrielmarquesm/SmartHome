@@ -6,7 +6,7 @@ service HomeAssistant{
   rpc modifyActuator(Params) returns (Info){}
 }
 
-service AC {
+service AC{
   rpc turnOn(Empty) returns (PowerStatus) {}
   rpc turnOff(Empty) returns (PowerStatus) {}
   rpc changeTemperature (TempRequest) returns (TempResponse) {}
@@ -33,20 +33,8 @@ message PowerStatus{
 
 
 //HomeAssistant
-
-message ActionList{
-  repeated Action action = 1;
-}
-message Action{
-  string key = 1;
-}
-
 message Key {
   string key = 1;
-}
-
-message Info {
-  string info = 1;
 }
 
 message Params{
@@ -55,6 +43,9 @@ message Params{
   string param = 3;
 }
 
+message Info {
+  string info = 1;
+}
 
 //AC
 message TempRequest {
