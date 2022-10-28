@@ -2,8 +2,6 @@
 syntax = "proto3";
 
 service HomeAssistant{
-  //rpc listDevices(Empty) returns (DeviceList){}
-  //rpc listActions(Device) returns (ActionList){}
   rpc checkSensorInfo(Key) returns (Info){}
   rpc modifyActuator(Params) returns (Info){}
 }
@@ -36,12 +34,6 @@ message PowerStatus{
 
 //HomeAssistant
 
-// message DeviceList{
-//   repeated Device device = 1;
-// }
-// message Device{
-//   string key = 1;
-// }
 message ActionList{
   repeated Action action = 1;
 }

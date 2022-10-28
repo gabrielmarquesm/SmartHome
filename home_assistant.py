@@ -59,8 +59,6 @@ class HomeAssistant():
         actuator = message["actuator"]
         content = message["content"]
 
-        # channel = grpc.insecure_channel(kIP+':'+kPort)
-
         match sensor:
             case Sensors.TEMP:
                 temp: float = content
