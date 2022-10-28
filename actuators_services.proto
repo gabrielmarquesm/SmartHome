@@ -1,6 +1,12 @@
 // indica a sintaxe
 syntax = "proto3";
 
+service HomeAssistant{
+  rpc listDevices(Empty) returns (DeviceList){}
+  rpc listActions(Device) returns (ActionList){}
+  rpc checkSensorInfo(Key) returns (Info){}
+}
+
 service AC {
   rpc turnOn(Empty) returns (PowerStatus) {}
   rpc turnOff(Empty) returns (PowerStatus) {}
@@ -13,9 +19,10 @@ service Lamp{
   rpc changeColor(ColorRequest) returns (ColorResponse) {}
 }
 
-service Sprinkle{
+service Alarm{
   rpc turnOn(Empty) returns (PowerStatus) {}
   rpc turnOff(Empty) returns (PowerStatus) {}
+  rpc sendMessage(Empty) returns (MessageResponse) {}
 }
 
 message Empty{
@@ -24,6 +31,30 @@ message Empty{
 message PowerStatus{
   string status = 1;
 }
+
+
+//HomeAssistant
+message DeviceList{
+  repeated Device device = 1;
+}
+message Device{
+  string key = 1;
+}
+message ActionList{
+  repeated Action action = 1;
+}
+message Action{
+  string key = 1;
+}
+
+message Key {
+  string key = 1;
+}
+
+message Info {
+  string info = 1;
+}
+
 
 //AC
 message TempRequest {
@@ -41,6 +72,10 @@ message ColorResponse{
   Color color = 1;
 }
 
+//Alarm
+message MessageResponse {
+  string message = 1;
+}
 
 enum Color{
   WHITE = 0; 

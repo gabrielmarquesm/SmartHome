@@ -5,6 +5,133 @@ import grpc
 import actuators_services_pb2 as actuators__services__pb2
 
 
+class HomeAssistantStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.listDevices = channel.unary_unary(
+                '/HomeAssistant/listDevices',
+                request_serializer=actuators__services__pb2.Empty.SerializeToString,
+                response_deserializer=actuators__services__pb2.DeviceList.FromString,
+                )
+        self.listActions = channel.unary_unary(
+                '/HomeAssistant/listActions',
+                request_serializer=actuators__services__pb2.Device.SerializeToString,
+                response_deserializer=actuators__services__pb2.ActionList.FromString,
+                )
+        self.checkSensorInfo = channel.unary_unary(
+                '/HomeAssistant/checkSensorInfo',
+                request_serializer=actuators__services__pb2.Key.SerializeToString,
+                response_deserializer=actuators__services__pb2.Info.FromString,
+                )
+
+
+class HomeAssistantServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def listDevices(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def listActions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def checkSensorInfo(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_HomeAssistantServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'listDevices': grpc.unary_unary_rpc_method_handler(
+                    servicer.listDevices,
+                    request_deserializer=actuators__services__pb2.Empty.FromString,
+                    response_serializer=actuators__services__pb2.DeviceList.SerializeToString,
+            ),
+            'listActions': grpc.unary_unary_rpc_method_handler(
+                    servicer.listActions,
+                    request_deserializer=actuators__services__pb2.Device.FromString,
+                    response_serializer=actuators__services__pb2.ActionList.SerializeToString,
+            ),
+            'checkSensorInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.checkSensorInfo,
+                    request_deserializer=actuators__services__pb2.Key.FromString,
+                    response_serializer=actuators__services__pb2.Info.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'HomeAssistant', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class HomeAssistant(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def listDevices(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HomeAssistant/listDevices',
+            actuators__services__pb2.Empty.SerializeToString,
+            actuators__services__pb2.DeviceList.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def listActions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HomeAssistant/listActions',
+            actuators__services__pb2.Device.SerializeToString,
+            actuators__services__pb2.ActionList.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def checkSensorInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HomeAssistant/checkSensorInfo',
+            actuators__services__pb2.Key.SerializeToString,
+            actuators__services__pb2.Info.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+
 class ACStub(object):
     """Missing associated documentation comment in .proto file."""
 
@@ -259,7 +386,7 @@ class Lamp(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
 
-class SprinkleStub(object):
+class AlarmStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -269,18 +396,23 @@ class SprinkleStub(object):
             channel: A grpc.Channel.
         """
         self.turnOn = channel.unary_unary(
-                '/Sprinkle/turnOn',
+                '/Alarm/turnOn',
                 request_serializer=actuators__services__pb2.Empty.SerializeToString,
                 response_deserializer=actuators__services__pb2.PowerStatus.FromString,
                 )
         self.turnOff = channel.unary_unary(
-                '/Sprinkle/turnOff',
+                '/Alarm/turnOff',
                 request_serializer=actuators__services__pb2.Empty.SerializeToString,
                 response_deserializer=actuators__services__pb2.PowerStatus.FromString,
                 )
+        self.sendMessage = channel.unary_unary(
+                '/Alarm/sendMessage',
+                request_serializer=actuators__services__pb2.Empty.SerializeToString,
+                response_deserializer=actuators__services__pb2.MessageResponse.FromString,
+                )
 
 
-class SprinkleServicer(object):
+class AlarmServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def turnOn(self, request, context):
@@ -295,8 +427,14 @@ class SprinkleServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def sendMessage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-def add_SprinkleServicer_to_server(servicer, server):
+
+def add_AlarmServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'turnOn': grpc.unary_unary_rpc_method_handler(
                     servicer.turnOn,
@@ -308,14 +446,19 @@ def add_SprinkleServicer_to_server(servicer, server):
                     request_deserializer=actuators__services__pb2.Empty.FromString,
                     response_serializer=actuators__services__pb2.PowerStatus.SerializeToString,
             ),
+            'sendMessage': grpc.unary_unary_rpc_method_handler(
+                    servicer.sendMessage,
+                    request_deserializer=actuators__services__pb2.Empty.FromString,
+                    response_serializer=actuators__services__pb2.MessageResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Sprinkle', rpc_method_handlers)
+            'Alarm', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class Sprinkle(object):
+class Alarm(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -329,7 +472,7 @@ class Sprinkle(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Sprinkle/turnOn',
+        return grpc.experimental.unary_unary(request, target, '/Alarm/turnOn',
             actuators__services__pb2.Empty.SerializeToString,
             actuators__services__pb2.PowerStatus.FromString,
             options, channel_credentials,
@@ -346,8 +489,25 @@ class Sprinkle(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Sprinkle/turnOff',
+        return grpc.experimental.unary_unary(request, target, '/Alarm/turnOff',
             actuators__services__pb2.Empty.SerializeToString,
             actuators__services__pb2.PowerStatus.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def sendMessage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Alarm/sendMessage',
+            actuators__services__pb2.Empty.SerializeToString,
+            actuators__services__pb2.MessageResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
