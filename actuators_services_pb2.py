@@ -13,47 +13,45 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18\x61\x63tuators_services.proto\"\x07\n\x05\x45mpty\"\x1d\n\x0bPowerStatus\x12\x0e\n\x06status\x18\x01 \x01(\t\"%\n\nDeviceList\x12\x17\n\x06\x64\x65vice\x18\x01 \x03(\x0b\x32\x07.Device\"\x15\n\x06\x44\x65vice\x12\x0b\n\x03key\x18\x01 \x01(\t\"%\n\nActionList\x12\x17\n\x06\x61\x63tion\x18\x01 \x03(\x0b\x32\x07.Action\"\x15\n\x06\x41\x63tion\x12\x0b\n\x03key\x18\x01 \x01(\t\"\x12\n\x03Key\x12\x0b\n\x03key\x18\x01 \x01(\t\"\x14\n\x04Info\x12\x0c\n\x04info\x18\x01 \x01(\t\"\"\n\x0bTempRequest\x12\x13\n\x0btempCelsius\x18\x01 \x01(\x01\"#\n\x0cTempResponse\x12\x13\n\x0btempCelsius\x18\x01 \x01(\x01\"%\n\x0c\x43olorRequest\x12\x15\n\x05\x63olor\x18\x01 \x01(\x0e\x32\x06.Color\"&\n\rColorResponse\x12\x15\n\x05\x63olor\x18\x01 \x01(\x0e\x32\x06.Color\"\"\n\x0fMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t*_\n\x05\x43olor\x12\t\n\x05WHITE\x10\x00\x12\x07\n\x03RED\x10\x01\x12\t\n\x05GREEN\x10\x02\x12\x08\n\x04\x42LUE\x10\x03\x12\n\n\x06YELLOW\x10\x04\x12\n\n\x06ORANGE\x10\x05\x12\n\n\x06PURPLE\x10\x06\x12\t\n\x05\x42ROWN\x10\x07\x32~\n\rHomeAssistant\x12$\n\x0blistDevices\x12\x06.Empty\x1a\x0b.DeviceList\"\x00\x12%\n\x0blistActions\x12\x07.Device\x1a\x0b.ActionList\"\x00\x12 \n\x0f\x63heckSensorInfo\x12\x04.Key\x1a\x05.Info\"\x00\x32}\n\x02\x41\x43\x12 \n\x06turnOn\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12!\n\x07turnOff\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12\x32\n\x11\x63hangeTemperature\x12\x0c.TempRequest\x1a\r.TempResponse\"\x00\x32{\n\x04Lamp\x12 \n\x06turnOn\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12!\n\x07turnOff\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12.\n\x0b\x63hangeColor\x12\r.ColorRequest\x1a\x0e.ColorResponse\"\x00\x32w\n\x05\x41larm\x12 \n\x06turnOn\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12!\n\x07turnOff\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12)\n\x0bsendMessage\x12\x06.Empty\x1a\x10.MessageResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18\x61\x63tuators_services.proto\"\x07\n\x05\x45mpty\"\x1d\n\x0bPowerStatus\x12\x0e\n\x06status\x18\x01 \x01(\t\"%\n\nActionList\x12\x17\n\x06\x61\x63tion\x18\x01 \x03(\x0b\x32\x07.Action\"\x15\n\x06\x41\x63tion\x12\x0b\n\x03key\x18\x01 \x01(\t\"\x12\n\x03Key\x12\x0b\n\x03key\x18\x01 \x01(\t\"\x14\n\x04Info\x12\x0c\n\x04info\x18\x01 \x01(\t\"9\n\x06Params\x12\x10\n\x08\x61\x63tuator\x18\x01 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x02 \x01(\t\x12\r\n\x05param\x18\x03 \x01(\t\"\"\n\x0bTempRequest\x12\x13\n\x0btempCelsius\x18\x01 \x01(\x01\"#\n\x0cTempResponse\x12\x13\n\x0btempCelsius\x18\x01 \x01(\x01\"%\n\x0c\x43olorRequest\x12\x15\n\x05\x63olor\x18\x01 \x01(\x0e\x32\x06.Color\"&\n\rColorResponse\x12\x15\n\x05\x63olor\x18\x01 \x01(\x0e\x32\x06.Color\"\"\n\x0fMessageResponse\x12\x0f\n\x07message\x18\x01 \x01(\t*_\n\x05\x43olor\x12\t\n\x05WHITE\x10\x00\x12\x07\n\x03RED\x10\x01\x12\t\n\x05GREEN\x10\x02\x12\x08\n\x04\x42LUE\x10\x03\x12\n\n\x06YELLOW\x10\x04\x12\n\n\x06ORANGE\x10\x05\x12\n\n\x06PURPLE\x10\x06\x12\t\n\x05\x42ROWN\x10\x07\x32U\n\rHomeAssistant\x12 \n\x0f\x63heckSensorInfo\x12\x04.Key\x1a\x05.Info\"\x00\x12\"\n\x0emodifyActuator\x12\x07.Params\x1a\x05.Info\"\x00\x32}\n\x02\x41\x43\x12 \n\x06turnOn\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12!\n\x07turnOff\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12\x32\n\x11\x63hangeTemperature\x12\x0c.TempRequest\x1a\r.TempResponse\"\x00\x32{\n\x04Lamp\x12 \n\x06turnOn\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12!\n\x07turnOff\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12.\n\x0b\x63hangeColor\x12\r.ColorRequest\x1a\x0e.ColorResponse\"\x00\x32w\n\x05\x41larm\x12 \n\x06turnOn\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12!\n\x07turnOff\x12\x06.Empty\x1a\x0c.PowerStatus\"\x00\x12)\n\x0bsendMessage\x12\x06.Empty\x1a\x10.MessageResponse\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'actuators_services_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _COLOR._serialized_start=422
-  _COLOR._serialized_end=517
+  _COLOR._serialized_start=419
+  _COLOR._serialized_end=514
   _EMPTY._serialized_start=28
   _EMPTY._serialized_end=35
   _POWERSTATUS._serialized_start=37
   _POWERSTATUS._serialized_end=66
-  _DEVICELIST._serialized_start=68
-  _DEVICELIST._serialized_end=105
-  _DEVICE._serialized_start=107
-  _DEVICE._serialized_end=128
-  _ACTIONLIST._serialized_start=130
-  _ACTIONLIST._serialized_end=167
-  _ACTION._serialized_start=169
-  _ACTION._serialized_end=190
-  _KEY._serialized_start=192
-  _KEY._serialized_end=210
-  _INFO._serialized_start=212
-  _INFO._serialized_end=232
-  _TEMPREQUEST._serialized_start=234
-  _TEMPREQUEST._serialized_end=268
-  _TEMPRESPONSE._serialized_start=270
-  _TEMPRESPONSE._serialized_end=305
-  _COLORREQUEST._serialized_start=307
-  _COLORREQUEST._serialized_end=344
-  _COLORRESPONSE._serialized_start=346
-  _COLORRESPONSE._serialized_end=384
-  _MESSAGERESPONSE._serialized_start=386
-  _MESSAGERESPONSE._serialized_end=420
-  _HOMEASSISTANT._serialized_start=519
-  _HOMEASSISTANT._serialized_end=645
-  _AC._serialized_start=647
-  _AC._serialized_end=772
-  _LAMP._serialized_start=774
-  _LAMP._serialized_end=897
-  _ALARM._serialized_start=899
-  _ALARM._serialized_end=1018
+  _ACTIONLIST._serialized_start=68
+  _ACTIONLIST._serialized_end=105
+  _ACTION._serialized_start=107
+  _ACTION._serialized_end=128
+  _KEY._serialized_start=130
+  _KEY._serialized_end=148
+  _INFO._serialized_start=150
+  _INFO._serialized_end=170
+  _PARAMS._serialized_start=172
+  _PARAMS._serialized_end=229
+  _TEMPREQUEST._serialized_start=231
+  _TEMPREQUEST._serialized_end=265
+  _TEMPRESPONSE._serialized_start=267
+  _TEMPRESPONSE._serialized_end=302
+  _COLORREQUEST._serialized_start=304
+  _COLORREQUEST._serialized_end=341
+  _COLORRESPONSE._serialized_start=343
+  _COLORRESPONSE._serialized_end=381
+  _MESSAGERESPONSE._serialized_start=383
+  _MESSAGERESPONSE._serialized_end=417
+  _HOMEASSISTANT._serialized_start=516
+  _HOMEASSISTANT._serialized_end=601
+  _AC._serialized_start=603
+  _AC._serialized_end=728
+  _LAMP._serialized_start=730
+  _LAMP._serialized_end=853
+  _ALARM._serialized_start=855
+  _ALARM._serialized_end=974
 # @@protoc_insertion_point(module_scope)

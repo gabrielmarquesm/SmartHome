@@ -11,7 +11,7 @@ from devices.actuators.AC import AC
 from devices.actuators.actuator import PowerStatus
 from devices.actuators.alarm import Alarm
 from devices.actuators.lamp import Lamp
-from utils import kIP, kPort, kPortClient, Sensors, kExchange
+from utils import convertColor, kIP, kPort, kPortClient, kExchange, Sensors, Actuators, Actions
 
 
 class HomeAssistant():
@@ -21,23 +21,11 @@ class HomeAssistant():
             Sensors.SOUND: 86,
             Sensors.MOTION: False
         }
-
-    def start_rpc(self):
-        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        pb_grpc.add_ACServicer_to_server(
-            AC(), server)
-        pb_grpc.add_LampServicer_to_server(
-            Lamp(), server)
-        pb_grpc.add_AlarmServicer_to_server(
-            Alarm(), server)
-        server.add_insecure_port("[::]:"+kPort)
-        server.start()
-        print("[RPC] Running!")
-        server.wait_for_termination()
+        self.channel = grpc.insecure_channel(kIP+':'+kPort)
 
     def start_rpc_client(self):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        pb_grpc.add_HomeAssistantServicer_to_server(HomeAssistant(), server)
+        pb_grpc.add_HomeAssistantServicer_to_server(self, server)
         server.add_insecure_port("[::]:"+kPortClient)
         server.start()
         print("[RPC Client] Running!")
@@ -71,35 +59,32 @@ class HomeAssistant():
         actuator = message["actuator"]
         content = message["content"]
 
-        channel = grpc.insecure_channel(kIP+':'+kPort)
+        # channel = grpc.insecure_channel(kIP+':'+kPort)
 
         match sensor:
             case Sensors.TEMP:
                 temp: float = content
                 self.sensors_info[Sensors.TEMP] = temp
-                stub = pb_grpc.ACStub(channel)
+                stub = pb_grpc.ACStub(self.channel)
                 self.temp_handler(temp, stub)
 
             case Sensors.SOUND:
                 db: int = content
                 self.sensors_info[Sensors.SOUND] = db
-                stub = pb_grpc.AlarmStub(channel)
+                stub = pb_grpc.AlarmStub(self.channel)
                 self.sound_handler(db, stub)
 
             case Sensors.MOTION:
                 motion_detected: bool = content
                 self.sensors_info[Sensors.MOTION] = motion_detected
-                stub = pb_grpc.LampStub(channel)
+                stub = pb_grpc.LampStub(self.channel)
                 self.motion_handler(motion_detected, stub)
 
     def run(self):
         rabbit_thread = threading.Thread(
             target=self.start_rabbit)
         rabbit_thread.start()
-        self.start_rpc()
-        print("AAAAA")
-        # self.start_rpc_client()
-        print("BBBBB")
+        self.start_rpc_client()
 
     def temp_handler(self, temp, stub):
         if temp > 30:
@@ -155,32 +140,50 @@ class HomeAssistant():
         msg = str(self.sensors_info[key])
         return pb.Info(info=msg)
 
-    def listDevices(self, request, context):
-        pass
+    def modifyActuator(self, request, context):
+        msg = {
+            'actuator': request.actuator,
+            'action': request.action,
+            'param': request.param
+        }
 
-    def listActions(self, request, context):
-        pass
+        match msg['actuator']:
+            case Actuators.AC:
+                stub = pb_grpc.ACStub(self.channel)
+                temp = float(
+                    msg["param"]) if msg["param"].isnumeric() else 25.0
+                match msg['action']:
+                    case Actions.TURN_OFF:
+                        return stub.turnOff(pb.Empty())
+                    case Actions.TURN_ON:
+                        return stub.turnOn(pb.Empty())
+                    case Actions.CHANGE_TEMP:
+                        msg = stub.changeTemperature(
+                            pb.TempRequest(tempCelsius=temp)).tempCelsius
 
-    def applyActions(self, request, context):
-        pass
-        #  match sensor:
-        #     case Sensors.TEMP:
-        #         temp: float = content
-        #         self.sensors_info[Sensors.TEMP] = temp
-        #         stub = pb_grpc.ACStub(channel)
-        #         self.temp_handler(temp, stub)
+                        return pb.Info(info=str(msg))
 
-        #     case Sensors.SOUND:
-        #         db: int = content
-        #         self.sensors_info[Sensors.SOUND] = db
-        #         stub = pb_grpc.AlarmStub(channel)
-        #         self.sound_handler(db, stub)
+            case Actuators.ALARM:
+                stub = pb_grpc.AlarmStub(self.channel)
+                match msg['action']:
+                    case Actions.TURN_OFF:
+                        return stub.turnOff(pb.Empty())
+                    case Actions.TURN_ON:
+                        return stub.turnOn(pb.Empty())
 
-        #     case Sensors.MOTION:
-        #         motion_detected: bool = content
-        #         self.sensors_info[Sensors.MOTION] = motion_detected
-        #         stub = pb_grpc.LampStub(channel)
-        #         self.motion_handler(motion_detected, stub)
+            case Actuators.LAMP:
+                stub = pb_grpc.LampStub(self.channel)
+                color = convertColor(msg["param"])
+                match msg["action"]:
+                    case Actions.TURN_OFF:
+                        return stub.turnOff(pb.Empty())
+                    case Actions.TURN_ON:
+                        return stub.turnOn(pb.Empty())
+                    case Actions.CHANGE_COLOR:
+                        color_id = stub.changeColor(
+                            pb.ColorRequest(color=color)).color
+
+                        return pb.Info(info=pb.Color.Name(color_id))
 
 
 if __name__ == "__main__":

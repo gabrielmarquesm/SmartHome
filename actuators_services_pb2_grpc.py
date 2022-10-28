@@ -14,19 +14,14 @@ class HomeAssistantStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.listDevices = channel.unary_unary(
-                '/HomeAssistant/listDevices',
-                request_serializer=actuators__services__pb2.Empty.SerializeToString,
-                response_deserializer=actuators__services__pb2.DeviceList.FromString,
-                )
-        self.listActions = channel.unary_unary(
-                '/HomeAssistant/listActions',
-                request_serializer=actuators__services__pb2.Device.SerializeToString,
-                response_deserializer=actuators__services__pb2.ActionList.FromString,
-                )
         self.checkSensorInfo = channel.unary_unary(
                 '/HomeAssistant/checkSensorInfo',
                 request_serializer=actuators__services__pb2.Key.SerializeToString,
+                response_deserializer=actuators__services__pb2.Info.FromString,
+                )
+        self.modifyActuator = channel.unary_unary(
+                '/HomeAssistant/modifyActuator',
+                request_serializer=actuators__services__pb2.Params.SerializeToString,
                 response_deserializer=actuators__services__pb2.Info.FromString,
                 )
 
@@ -34,19 +29,15 @@ class HomeAssistantStub(object):
 class HomeAssistantServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def listDevices(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def listActions(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def checkSensorInfo(self, request, context):
+        """rpc listDevices(Empty) returns (DeviceList){}
+        rpc listActions(Device) returns (ActionList){}
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def modifyActuator(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -55,19 +46,14 @@ class HomeAssistantServicer(object):
 
 def add_HomeAssistantServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'listDevices': grpc.unary_unary_rpc_method_handler(
-                    servicer.listDevices,
-                    request_deserializer=actuators__services__pb2.Empty.FromString,
-                    response_serializer=actuators__services__pb2.DeviceList.SerializeToString,
-            ),
-            'listActions': grpc.unary_unary_rpc_method_handler(
-                    servicer.listActions,
-                    request_deserializer=actuators__services__pb2.Device.FromString,
-                    response_serializer=actuators__services__pb2.ActionList.SerializeToString,
-            ),
             'checkSensorInfo': grpc.unary_unary_rpc_method_handler(
                     servicer.checkSensorInfo,
                     request_deserializer=actuators__services__pb2.Key.FromString,
+                    response_serializer=actuators__services__pb2.Info.SerializeToString,
+            ),
+            'modifyActuator': grpc.unary_unary_rpc_method_handler(
+                    servicer.modifyActuator,
+                    request_deserializer=actuators__services__pb2.Params.FromString,
                     response_serializer=actuators__services__pb2.Info.SerializeToString,
             ),
     }
@@ -79,40 +65,6 @@ def add_HomeAssistantServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class HomeAssistant(object):
     """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def listDevices(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/HomeAssistant/listDevices',
-            actuators__services__pb2.Empty.SerializeToString,
-            actuators__services__pb2.DeviceList.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def listActions(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/HomeAssistant/listActions',
-            actuators__services__pb2.Device.SerializeToString,
-            actuators__services__pb2.ActionList.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def checkSensorInfo(request,
@@ -127,6 +79,23 @@ class HomeAssistant(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/HomeAssistant/checkSensorInfo',
             actuators__services__pb2.Key.SerializeToString,
+            actuators__services__pb2.Info.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def modifyActuator(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HomeAssistant/modifyActuator',
+            actuators__services__pb2.Params.SerializeToString,
             actuators__services__pb2.Info.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
