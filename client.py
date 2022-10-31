@@ -151,6 +151,8 @@ class Client():
                     self.clear_console()
                 case "2":
                     self.modify_actuator()
+                case "q":
+                    break
                 case other:
                     print("No option found!")
 

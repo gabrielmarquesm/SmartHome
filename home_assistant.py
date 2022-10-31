@@ -139,31 +139,25 @@ class HomeAssistant():
         return pb.Info(info=msg)
 
     def modifyActuator(self, request, context):
-        msg = {
-            'actuator': request.actuator,
-            'action': request.action,
-            'param': request.param
-        }
-
-        match msg['actuator']:
+        match request.actuator:
             case Actuators.AC:
                 stub = pb_grpc.ACStub(self.channel)
                 temp = float(
-                    msg["param"]) if msg["param"].isnumeric() else 25.0
-                match msg['action']:
+                    request.param) if request.param.isnumeric() else 25.0
+                match request.action:
                     case Actions.TURN_OFF:
                         return stub.turnOff(pb.Empty())
                     case Actions.TURN_ON:
                         return stub.turnOn(pb.Empty())
                     case Actions.CHANGE_TEMP:
-                        msg = stub.changeTemperature(
+                        response = stub.changeTemperature(
                             pb.TempRequest(tempCelsius=temp)).tempCelsius
 
-                        return pb.Info(info=str(msg))
+                        return pb.Info(info=str(response))
 
             case Actuators.ALARM:
                 stub = pb_grpc.AlarmStub(self.channel)
-                match msg['action']:
+                match request.action:
                     case Actions.TURN_OFF:
                         return stub.turnOff(pb.Empty())
                     case Actions.TURN_ON:
@@ -171,8 +165,8 @@ class HomeAssistant():
 
             case Actuators.LAMP:
                 stub = pb_grpc.LampStub(self.channel)
-                color = convertColor(msg["param"])
-                match msg["action"]:
+                color = convertColor(request.param)
+                match request.action:
                     case Actions.TURN_OFF:
                         return stub.turnOff(pb.Empty())
                     case Actions.TURN_ON:
