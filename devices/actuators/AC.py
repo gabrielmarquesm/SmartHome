@@ -9,5 +9,8 @@ class AC(Actuator, pb_grpc.ACServicer):
         self.temperature = 25.0
 
     def changeTemperature(self, request, context):
-        self.temperature = request.tempCelsius
-        return pb.TempResponse(tempCelsius=self.temperature)
+        if self.power:
+            self.temperature = request.tempCelsius
+            return pb.TempResponse(tempCelsius=self.temperature)
+        else:
+            print("AC is not active")

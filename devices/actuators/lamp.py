@@ -1,4 +1,5 @@
 from enum import Enum
+
 import actuators_services_pb2 as pb
 import actuators_services_pb2_grpc as pb_grpc
 from devices.actuators.actuator import Actuator
@@ -12,5 +13,8 @@ class Lamp(Actuator, pb_grpc.LampServicer):
         self.color = Color.WHITE
 
     def changeColor(self, request, context):
-        self.color = request.color
-        return pb.ColorResponse(color=self.color)
+        if self.power:
+            self.color = request.color
+            return pb.ColorResponse(color=self.color)
+        else:
+            print("Lamp is not active")
