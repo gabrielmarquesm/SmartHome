@@ -1,10 +1,3 @@
-# Sistemas Distribuídos - Trabalho 2
+# Smart Home
 
-Assistente para casas inteligentes com uso sensores e atuadores. 
-
-Comunicação realizada entre os dispositivos e o home assistant usando RabbitMQ e gRPC. 
-
-Equipe:
-- Daniel Lima - 473255
-- Gabriel Marques - 470374
-- Matheus Freitas
+This project is a smart home assistant system that uses various sensors and actuators. The communication between devices and the home assistant is facilitated using RabbitMQ and gRPC.
